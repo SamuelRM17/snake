@@ -29,6 +29,18 @@ int isCollision(int x, int y, int snakeLength, int (*snake)[2]) {
     }
     return 0; //No hay colisión
 }
+void checkAppleSpawn(int *appleX, int *appleY, int snakeLength, int (*snake)[2]) {
+    for (int i = 0; i < snakeLength; i++) {
+        if (*appleX == snake[i][0] && *appleY == snake[i][1]) {
+
+            *appleX = (generateRandomNumber() % (15 - 3)) * 2 + 1;
+            *appleY = (generateRandomNumber() % (15 - 3)) * 2 + 1;
+
+            return;
+        }
+    }
+}
+
 
 
 int isOccupied(int x, int y, int snakeLength, int (*snake)[2]) {
@@ -195,7 +207,7 @@ void startGame() {
                     printRectangle(3, 3, 2, 2, 0x000000);
                     first = 1;
                 }
-                // Check for borders
+                //Check for borders
                 
                 if (x <= 1 || x >= 34 || y <= 1 || y >= 24) {
                     alive = 0;
@@ -204,12 +216,11 @@ void startGame() {
                 if (appleX == x && appleY == y) {
                     updateSnake(x, y, snakeLength, snake, 1);
                     snakeLength++;
-                    // Occupied
-                    appleX = (generateRandomNumber() % (15 - 3)) * 2 + 1;
-                    appleY = (generateRandomNumber() % (15 - 3)) * 2 + 1;
-                    printRectangle(appleX, appleY, 2, 2, 0x00FF00); // Print apple
+                    //Occupied
+                    checkAppleSpawn(&appleX, &appleY, snakeLength, snake);
+                    printRectangle(appleX, appleY, 2, 2, 0x00FF00); //print apple
                 } else {
-                    // Sleep
+                    //Sleep
                     for (int i = 0; i < 10000; i++) {
                     }
                     updateSnake(x, y, snakeLength, snake, 0);
