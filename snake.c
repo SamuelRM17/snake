@@ -60,7 +60,7 @@ void printRectangle(int x, int y, int w, int h, int color) {
         (*led_base) = color;
     }
 }
-void printRectangleFull(int x, int y, int w, int n, int color){
+void printRectangleFull(int x, int y, int w, int n, int color[50]){
      
      
      for(int i = 0; i<x; i++){
@@ -118,14 +118,12 @@ void startGame() {
     unsigned int x = 3;
     unsigned int y = 3;
 
+    printRectangle(0, 0, 35, 25, 0x33FFF3); // Border of the game
 
-    printRectangle(0, 0, 35, 25, 0x33FFF3); //border of the game
+    int snake[50][2]; // Stores the values where the snake is
+    int snakeLength = 1; // Stores the length of the snake
 
-
-    int snake[50][2];//stores the values where the snake is
-    int snakeLength = 1;//stores the length of the snake
-
-    int state = 0; //determines where the snake is programmed to turn
+    int state = 0; // Determines where the snake is programmed to turn
 
     int appleX = rand() % 15;
     int appleY = rand() % 15;
@@ -133,69 +131,55 @@ void startGame() {
     appleY = appleY * 2 + 1;
 
     appleX = 5;
-    appleY = 5;//hardcodiado para probar comer
-    printRectangle(appleX, appleY, 2, 2, 0x00FF00);//first apple
+    appleY = 5; // Hardcoded for testing eating
+    printRectangle(appleX, appleY, 2, 2, 0x00FF00); // First apple
 
     int first = 0;
     int alive = 1;
 
-    volatile unsigned int * original_led_base = led_base;
-    printRectangle(x, y, 2, 2, 0xFF0000); //first rectangle
+    volatile unsigned int *original_led_base = led_base;
+    printRectangle(x, y, 2, 2, 0xFF0000); // First rectangle
     led_base = original_led_base;
 
     while (1) {
-
         while (alive == 1) {
-unsigned int moved = 0;
+            unsigned int moved = 0;
 
-if (*d_pad_up == 1 && state != 2) {
-    state = 1;
-    moved = 1;
-    y -= 2;
-}
-else if (*d_pad_do == 1 && state != 1) {
-    state = 2;
-    moved = 1;
-    y += 2;
-}
-else if (*d_pad_le == 1 && state != 4) {
-    state = 3;
-    moved = 1;
-    x -= 2;
-}
-else if (*d_pad_ri == 1 && state != 3) {
-    state = 4;
-    moved = 1;
-    x += 2;
-}
-else {
-    // Continue moving in the current direction if no key pad input
-    
-    if (state == 1) {
-        moved = 1;
-        y -= 2;
-    }
-    else if (state == 2) {
-        moved = 1;
-
-        y += 2;
-    }
-    else if (state == 3) {
-        moved = 1;
-        x -= 2;
-    }
-    else if (state == 4) {
-        moved = 1;
-        x += 2;
-    }
-}
-
-
+            if (*d_pad_up == 1 && state != 2) {
+                state = 1;
+                moved = 1;
+                y -= 2;
+            } else if (*d_pad_do == 1 && state != 1) {
+                state = 2;
+                moved = 1;
+                y += 2;
+            } else if (*d_pad_le == 1 && state != 4) {
+                state = 3;
+                moved = 1;
+                x -= 2;
+            } else if (*d_pad_ri == 1 && state != 3) {
+                state = 4;
+                moved = 1;
+                x += 2;
+            } else {
+                // Continue moving in the current direction if no keypad input
+                if (state == 1) {
+                    moved = 1;
+                    y -= 2;
+                } else if (state == 2) {
+                    moved = 1;
+                    y += 2;
+                } else if (state == 3) {
+                    moved = 1;
+                    x -= 2;
+                } else if (state == 4) {
+                    moved = 1;
+                    x += 2;
+                }
+            }
 
             if (moved) {
-                
-
-                //check for borders
+                // Check for borders
                 if (x <= 1 || x >= 34 || y <= 1 || y >= 24) {
                     alive = 0;
                     printRectangle(0, 0, 35, 25, 0x33FFF3);
@@ -203,31 +187,31 @@ else {
                 if (appleX == x && appleY == y) {
                     updateSnake(x, y, snakeLength, snake, 1);
                     snakeLength++;
-                    //ocupied
-                    appleX = (generateRandomNumber() % (15-3)) * 2 + 1;
-                    appleY = (generateRandomNumber() % (15-3)) * 2 + 1;
-                    printRectangle(appleX, appleY, 2, 2, 0x00FF00);//print apple
-                }
-                else {
-                    //sleep
-                    for (int i = 0; i < 10000; i++){
-                        
+                    // Occupied
+                    appleX = (generateRandomNumber() % (15 - 3)) * 2 + 1;
+                    appleY = (generateRandomNumber() % (15 - 3)) * 2 + 1;
+                    printRectangle(appleX, appleY, 2, 2, 0x00FF00); // Print apple
+                } else {
+                    // Sleep
+                    for (int i = 0; i < 10000; i++) {
                     }
                     updateSnake(x, y, snakeLength, snake, 0);
                     printRectangle(0, 0, 35, 25, 0x33FFF3);
                 }
             }
-   
+        }
+        if (alive == 0){
+            break;
         }
     }
 }
+
 
 
 void main() {
     while(1) {
         
         if (*switch_base & SW0) {
-            printRectangleFull(0, 0, 35, 25, 0x000000); //prints a black rectangle to delete
             startGame();
         }
     }
