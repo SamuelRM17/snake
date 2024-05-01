@@ -60,6 +60,27 @@ void printRectangle(int x, int y, int w, int h, int color) {
         (*led_base) = color;
     }
 }
+void printRectangleFull(int x, int y, int w, int n, int color){
+     
+     
+     for(int i = 0; i<x; i++){
+          led_base += 1;
+     }
+     for(int i = 0; i<y; i++){
+          led_base += LED_MATRIX_0_WIDTH;
+     }
+     volatile unsigned int * start = led_base;
+     
+     for(int i = 0; i<w; i++){
+          led_base = start + i;
+          volatile unsigned int * led_base_save = led_base;
+          for(int j = 0; j<n; j++){
+               led_base += LED_MATRIX_0_WIDTH;
+               *led_base = color;
+          }
+          
+     }
+     }
 
 void deleteTail(int x, int y) {
     printRectangle(x, y, 2, 2, 0x000000); //prints a black rectangle to delete
@@ -206,6 +227,7 @@ void main() {
     while(1) {
         
         if (*switch_base & SW0) {
+            printRectangleFull(0, 0, 35, 25, 0x000000); //prints a black rectangle to delete
             startGame();
         }
     }
