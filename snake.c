@@ -184,7 +184,7 @@ void startGame() {
                 }
                 // Check for borders
                 
-                if (x <= 1 || x >= 34 || y <= 1 || y >= 24) {
+                if (x <= 1 || x >= 35 || y <= 1 || y >= 25) {
                     alive = 0;
                     printRectangle(0, 0, 35, 25, 0x33FFF3);
                 }
