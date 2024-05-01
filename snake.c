@@ -21,6 +21,16 @@ int generateRandomNumber() {
     return randomNumber;
 }
 
+int isCollision(int x, int y, int snakeLength, int (*snake)[2]) {
+    for (int i = 1; i < snakeLength; i++) {
+        if (snake[i][0] == x && snake[i][1] == y) {
+            return 1; //Hay colisión
+        }
+    }
+    return 0; //No hay colisión
+}
+
+
 int isOccupied(int x, int y, int snakeLength, int (*snake)[2]) {
     for (int i = 0; i < snakeLength; i++) {
         if (snake[i][0] == x && snake[i][1] == y) {
@@ -177,14 +187,17 @@ void startGame() {
             }
 
             if (moved) {
-                //
+                if (isCollision(x, y, snakeLength, snake)) {
+                    alive = 0;
+                    
+                }
                 if (first == 0) {
                     printRectangle(3, 3, 2, 2, 0x000000);
                     first = 1;
                 }
                 // Check for borders
                 
-                if (x <= 1 || x >= 35 || y <= 1 || y >= 25) {
+                if (x <= 1 || x >= 34 || y <= 1 || y >= 24) {
                     alive = 0;
                     printRectangle(0, 0, 35, 25, 0x33FFF3);
                 }
