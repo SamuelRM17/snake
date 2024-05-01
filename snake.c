@@ -177,7 +177,13 @@ void startGame() {
             }
 
             if (moved) {
+                //
+                if (first == 0) {
+                    printRectangle(3, 3, 2, 2, 0x000000);
+                    first = 1;
+                }
                 // Check for borders
+                
                 if (x <= 1 || x >= 34 || y <= 1 || y >= 24) {
                     alive = 0;
                     printRectangle(0, 0, 35, 25, 0x33FFF3);
@@ -212,7 +218,7 @@ void main() {
         if (*switch_base & SW0) {
 
             startGame();
-            printRectangleFull(0, 0, 35, 25, 0x000000);
+            printRectangleFull(0, 0, 35, 26, 0x000000);
         }
     }
 }
